@@ -16,9 +16,15 @@ namespace ConsoleUI
             //UserTest();
             //CustomerTest();
 
+            RentalTest();
+
+        }
+
+        private static void RentalTest()
+        {
             RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            var result=rentalManager.Add(new Rental { CarId=3,CustomerID=1,RentDate=DateTime.Now});
-            if(result.Success )
+            var result = rentalManager.Add(new Rental { CarId = 3, CustomerID = 1, RentDate = DateTime.Now });
+            if (result.Success)
             {
                 Console.WriteLine(result.Message);
             }
@@ -26,7 +32,6 @@ namespace ConsoleUI
             {
                 Console.WriteLine(result.Message);
             }
-            
         }
 
         private static void CustomerTest()
