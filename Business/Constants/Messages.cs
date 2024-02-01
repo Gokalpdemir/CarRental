@@ -13,5 +13,6 @@ namespace Business.Constants
         public static string Updated = "Başarıyla Güncellendi";
         public static string Listed = "Başarıyla Listelendi";
         public static string Error = "İşlem Başarısız";
+        internal static string CarIsNotAvailable="Araç Müsait Değil";
     }
 }
