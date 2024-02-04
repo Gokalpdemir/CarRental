@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Abstract\" />
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>

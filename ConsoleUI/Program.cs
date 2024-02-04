@@ -2,6 +2,7 @@
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace ConsoleUI
 { 
@@ -10,20 +11,20 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             //CarTest();
-            //BrandTest();
+            BrandTest();
             //ColorTest();
 
             //UserTest();
             //CustomerTest();
 
-            RentalTest();
+            //RentalTest();
 
         }
 
         private static void RentalTest()
         {
             RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            var result = rentalManager.Add(new Rental { CarId = 3, CustomerID = 1, RentDate = DateTime.Now });
+            var result = rentalManager.Add(new RentalDto { CarId = 3, CustomerID = 1, RentDate = DateTime.Now });
             if (result.Success)
             {
                 Console.WriteLine(result.Message);
@@ -37,7 +38,7 @@ namespace ConsoleUI
         private static void CustomerTest()
         {
             CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
-            var result = customerManager.Add(new Customer { UserId = 1, CompanyName = "Demir Holding", });
+            var result = customerManager.Add(new CustomerDto { UserId = 1, CompanyName = "Demir Holding", });
             if (result.Success)
             {
                 Console.WriteLine(result.Message);
@@ -47,13 +48,13 @@ namespace ConsoleUI
         private static void UserTest()
         {
             UserManager userManager = new UserManager(new EfUserDal());
-            userManager.Add(new User { FirstName = "Gökalp", LastName = "Demir", Email = "gokalpdmmr@gmail.com", Password = "6356210t" });
+            userManager.Add(new UserDto { FirstName = "Gökalp", LastName = "Demir", Email = "gokalpdmmr@gmail.com", Password = "6356210t" });
         }
 
         private static void ColorTest()
         {
             ColorManager colorManager = new ColorManager(new EfColorDal());
-           var result= colorManager.Add(new Color { Name="Beyaz"});
+           var result= colorManager.Add(new ColorDto { Name="Beyaz"});
             if (result.Success)
             {
                 Console.WriteLine(result.Message);
@@ -64,9 +65,14 @@ namespace ConsoleUI
         {
             BrandManager brandManager = new BrandManager(new EfBrandDal());
 
-            foreach (var brand in brandManager.GetAll().Data)
+          var result=  brandManager.GetAll();
+            if (result.Success)
             {
-                Console.WriteLine(brand.Name);
+                Console.WriteLine(result);
+            }
+            else
+            {
+                Console.WriteLine(result);
             }
         }
 

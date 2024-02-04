@@ -5,16 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Entities.DTOs
 {
-    public class Color:IEntity
+    public class BrandDto:IDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Car> Cars { get; set;}
-        public Color()
-        {
-            Cars = new HashSet<Car>();
-        }
     }
 }

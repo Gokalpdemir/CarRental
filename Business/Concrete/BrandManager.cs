@@ -1,8 +1,10 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,37 +16,43 @@ namespace Business.Concrete
     public class BrandManager : IBrandService
     {
         IBrandDal _brandDal;
+        IMapper _mapper;
 
         public BrandManager(IBrandDal brandDal)
         {
             _brandDal = brandDal;
         }
-
-        public IResult Add(Brand brand)
+        public BrandManager(IBrandDal brandDal,IMapper mapper)
         {
-            _brandDal.Add(brand);
+            _brandDal = brandDal;
+            _mapper = mapper;
+        }
+
+        public IResult Add(BrandDto brandDto)
+        {
+            _brandDal.Add(_mapper.Map<Brand>(brandDto));
             return new SuccessResult(Messages.Added);
         }
 
-        public IResult Delete(Brand brand)
+        public IResult Delete(BrandDto brandDto)
         {
-           _brandDal.Delete(brand);
+           _brandDal.Delete(_mapper.Map<Brand>(brandDto));
             return new SuccessResult(Messages.Deleted);
         }
 
-        public IDataResult<List<Brand>> GetAll()
+        public IDataResult<List<BrandDto>> GetAll()
         {
-           return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(),Messages.Listed);
+           return new SuccessDataResult<List<BrandDto>>(_mapper.Map<List<BrandDto>>(_brandDal.GetAll()),Messages.Listed);
         }
         
-        public IDataResult<Brand> GetById(int id)
+        public IDataResult<BrandDto> GetById(int id)
         {
-            return new SuccessDataResult<Brand>(_brandDal.Get(p => p.Id == id), Messages.Listed);
+            return new SuccessDataResult<BrandDto>(_mapper.Map<BrandDto>(_brandDal.Get(p => p.Id == id)), Messages.Listed);
         }
 
-        public IResult Update(Brand brand)
+        public IResult Update(BrandDto brandDto)
         {
-           _brandDal.Update(brand);
+            _brandDal.Update(_mapper.Map<Brand>(brandDto));
             return new SuccessResult(Messages.Updated);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -15,17 +16,24 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+        IMapper _mapper;
 
+        public CarManager(ICarDal carDal,IMapper mapper)
+        {
+            _carDal = carDal;
+            _mapper = mapper;
+        }
         public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
+            
         }
 
-        public IResult Add(Car car)
+        public IResult Add(CarDto carDto)
         {
-            if (car.CarName.Length >= 2 && car.DailyPrice > 0)
+            if (carDto.CarName.Length >= 2 && carDto.DailyPrice > 0)
             {
-                _carDal.Add(car);
+                _carDal.Add(_mapper.Map<Car>(carDto));
                 return new SuccessResult(Messages.Added);
             }
             else
@@ -35,20 +43,22 @@ namespace Business.Concrete
                
         }
 
-        public IResult Delete(Car car)
+       
+
+        public IResult Delete(CarDto carDto)
         {
-           _carDal.Delete(car);
+           _carDal.Delete(_mapper.Map<Car>(carDto));
             return new SuccessResult(Messages.Deleted);
         }
 
-        public IDataResult<List<Car>> GetAll()
+        public IDataResult<List<CarDto>> GetAll()
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Messages.Listed);
+            return new SuccessDataResult<List<CarDto>>(_mapper.Map<List<CarDto>>(_carDal.GetAll()),Messages.Listed);
         }
 
-        public IDataResult<Car> GetById(int id)
+        public IDataResult<CarDto> GetById(int id)
         {
-            return new SuccessDataResult<Car>(_carDal.Get(p => p.Id == id),Messages.Listed);
+            return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(_carDal.Get(p => p.Id == id)),Messages.Listed);
         }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails()
@@ -56,9 +66,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(),Messages.Listed);
         }
 
-        public IResult Update(Car car)
+        public IResult Update(CarDto carDto)
         {
-            _carDal.Update(car);
+            _carDal.Update(_mapper.Map<Car>(carDto));
             return new SuccessResult( Messages.Updated);
             
         }

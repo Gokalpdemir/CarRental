@@ -1,8 +1,10 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,37 +16,43 @@ namespace Business.Concrete
     public class ColorManager : IColorService
     {
         IColorDal _colorDal;
+        IMapper _mapper;
 
         public ColorManager(IColorDal colorDal)
         {
             _colorDal = colorDal;
         }
-
-        public IResult Add(Color color)
+        public ColorManager(IColorDal colorDal,IMapper mapper)
         {
-            _colorDal.Add(color);
+            _colorDal = colorDal;
+            _mapper = mapper;
+        }
+
+        public IResult Add(ColorDto colorDto)
+        {
+            _colorDal.Add(_mapper.Map<Color>(colorDto));
             return new SuccessResult(Messages.Added);
         }
 
-        public IResult Delete(Color color)
+        public IResult Delete(ColorDto colorDto)
         {
-           _colorDal.Delete(color);
+           _colorDal.Delete(_mapper.Map<Color>(colorDto));
             return new SuccessResult(Messages.Deleted);
         }
 
-        public IDataResult<List<Color>> GetAll()
+        public IDataResult<List<ColorDto>> GetAll()
         {
-           return new SuccessDataResult<List<Color>>(_colorDal.GetAll(),Messages.Listed);
+           return new SuccessDataResult<List<ColorDto>>(_mapper.Map<List<ColorDto>>(_colorDal.GetAll()),Messages.Listed);
         }
 
-        public IDataResult<Color> GetById(int id)
+        public IDataResult<ColorDto> GetById(int id)
         {
-            return new SuccessDataResult<Color>(_colorDal.Get(p => p.Id == id),Messages.Listed);
+            return new SuccessDataResult<ColorDto>(_mapper.Map<ColorDto>(_colorDal.Get(p => p.Id == id)),Messages.Listed);
         }
 
-        public IResult Update(Color color)
+        public IResult Update(ColorDto colorDto)
         {
-            _colorDal.Update(color);
+            _colorDal.Update(_mapper.Map<Color>(colorDto));
             return new SuccessResult(Messages.Updated);
         }
     }

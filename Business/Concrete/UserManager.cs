@@ -1,8 +1,11 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
+using Business.AutoMappers;
 using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,37 +17,51 @@ namespace Business.Concrete
     public class UserManager : IUserService
     {
         IUserDal _userDal;
+        IMapper _mapper;
 
         public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
         }
-
-        public IResult Add(User user)
+        public UserManager(IUserDal userDal,IMapper mapper)
         {
-           _userDal.Add(user);
+            _userDal = userDal;
+            _mapper = mapper;
+        }
+        public IResult Add(UserDto userDto)
+        {
+           _userDal.Add(_mapper.Map<User>(userDto));
             return new SuccessResult(Messages.Added);
         }
 
-        public IResult Delete(User user)
+        public IResult Delete(UserDto userDto)
         {
-            _userDal.Delete(user);
+            _userDal.Delete(_mapper.Map<User>(userDto));
             return new SuccessResult(Messages.Deleted);
         }
 
-        public IDataResult<List<User>> GetAll()
+        public IDataResult<List<UserDto>> GetAll()
         {
-            return new SuccessDataResult<List<User>>(_userDal.GetAll(),Messages.Listed);
+            return new SuccessDataResult<List<UserDto>>(_mapper.Map<List<UserDto>>(_userDal.GetAll()),Messages.Listed);
         }
 
-        public IDataResult<User> GetById(int id)
+        public IDataResult<UserDto> GetById(int id)
         {
-            return new SuccessDataResult<User>(_userDal.Get(p=>p.Id==id),Messages.Listed);
+            var result = _mapper.Map<UserDto>(_userDal.Get(p => p.Id == id));
+            if(result ==null)
+            {
+                return new ErrorDataResult<UserDto>(Messages.Error);
+
+            }
+            return new SuccessDataResult<UserDto>(result,Messages.Listed);
+               
+
+            
         }
 
-        public IResult Update(User user)
+        public IResult Update(UserDto userDto)
         {
-            _userDal.Update(user);
+            _userDal.Update(_mapper.Map<User>(userDto));
             return new SuccessResult(Messages.Updated);
         }
     }

@@ -5,22 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Entities.DTOs
 {
-    public class User:IEntity
+    public class UserDto:IDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-
-        public virtual ICollection<Customer> Customers { get; }
-
-        public User()
-        {
-            Customers = new HashSet<Customer>();
-        }
-
     }
 }

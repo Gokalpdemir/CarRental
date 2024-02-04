@@ -5,10 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Entities.DTOs
 {
-    public class Car:IEntity
+    public class CarDto:IDto
     {
+        public CarDto(int id, int brandId, int colorId, string carName, int modelYear, decimal dailyPrice, string description)
+        {
+            Id = id;
+            BrandId = brandId;
+            ColorId = colorId;
+            CarName = carName;
+            ModelYear = modelYear;
+            DailyPrice = dailyPrice;
+            Description = description;
+        }
+
         public int Id { get; set; }
         public int BrandId { get; set; }
         public int ColorId { get; set; }
@@ -16,12 +27,7 @@ namespace Entities.Concrete
         public int ModelYear { get; set; }
         public decimal DailyPrice { get; set; }
         public string Description { get; set; }
-        public virtual Brand Brand { get; set; }
-        public virtual Color Color { get; set; }
-        public virtual ICollection<Rental> Rentals { get;  }
-        public Car()
-        {
-            Rentals=new HashSet<Rental>();
-        }
+
+
     }
 }
