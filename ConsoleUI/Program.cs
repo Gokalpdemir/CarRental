@@ -1,4 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -10,8 +11,21 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            IAuthenticationService authenticationService = new AuthentcionService(new EfUserDal(), new EfCustomerDal());
+            RegisterAsCustomerDto registerAsCustomerDto = new RegisterAsCustomerDto()
+            {
+                FirstName = "test",
+                LastName = "test",
+                Email = "test@gmail.com",
+                Password = "test",
+                CompanyName = "test"
+            };
+
+            authenticationService.RegisterAsCustomer(registerAsCustomerDto);
+
+
             //CarTest();
-            BrandTest();
+            //BrandTest();
             //ColorTest();
 
             //UserTest();

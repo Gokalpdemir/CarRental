@@ -16,9 +16,13 @@ namespace Entities.Concrete
         public int ModelYear { get; set; }
         public decimal DailyPrice { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public DateTime DeletedDate { get; set; }
         public virtual Brand Brand { get; set; }
         public virtual Color Color { get; set; }
         public virtual ICollection<Rental> Rentals { get;  }
+
         public Car()
         {
             Rentals=new HashSet<Rental>();
