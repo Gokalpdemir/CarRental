@@ -1,0 +1,20 @@
+﻿using Entities.DTOs;
+using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.ValidationRules.FluentValidation
+{
+    public class RentalDtoValidator:AbstractValidator<RentalDto>
+    {
+        public RentalDtoValidator()
+        {
+            RuleFor(r=>r.CustomerID).NotEmpty();
+            RuleFor(r=>r.CarId).NotEmpty();
+            RuleFor(r=>r.RentDate).NotEmpty();
+        }
+    }
+}

@@ -13,6 +13,10 @@ namespace Business.Constants
         public static string Updated = "Başarıyla Güncellendi";
         public static string Listed = "Başarıyla Listelendi";
         public static string Error = "İşlem Başarısız";
-        internal static string CarIsNotAvailable="Araç Müsait Değil";
+        public static string CarIsNotAvailable="Araç Müsait Değil";
+        public static string PasswordRequirements = "Şifreniz en az bir harf, bir rakam, bir özel karakter ve bir büyük harf içermeli ve toplamda en az 6 karakter uzunluğunda olmalıdır. ";
+        public static string FirstNameMustContainOnlyLetter = "Ad yalnızca harflerden oluşmalıdır ";
+        public static string LastNameMustContainOnlyLetter = "Soyad yalnızca harflerden oluşmalıdır ";
+        public static string ColorNameMustContainOnlyLetter = "Renk ismi yalnızca harflerden oluşmalıdır.";
     }
 }

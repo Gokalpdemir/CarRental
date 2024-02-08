@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -28,6 +30,7 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
+        [ValidationAspect(typeof(ColorDtoValidator))]
         public IResult Add(ColorDto colorDto)
         {
             _colorDal.Add(_mapper.Map<Color>(colorDto));
@@ -50,6 +53,7 @@ namespace Business.Concrete
             return new SuccessDataResult<ColorDto>(_mapper.Map<ColorDto>(_colorDal.Get(p => p.Id == id)),Messages.Listed);
         }
 
+        [ValidationAspect(typeof(ColorDtoValidator))]
         public IResult Update(ColorDto colorDto)
         {
             _colorDal.Update(_mapper.Map<Color>(colorDto));

@@ -2,12 +2,15 @@
 using Business.Abstract;
 using Business.AutoMappers;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +31,8 @@ namespace Business.Concrete
             _userDal = userDal;
             _mapper = mapper;
         }
+
+        [ValidationAspect(typeof(UserDtoValidator))]
         public IResult Add(UserDto userDto)
         {
            _userDal.Add(_mapper.Map<User>(userDto));
@@ -59,6 +64,7 @@ namespace Business.Concrete
             
         }
 
+        [ValidationAspect(typeof(UserDtoValidator))]
         public IResult Update(UserDto userDto)
         {
             _userDal.Update(_mapper.Map<User>(userDto));

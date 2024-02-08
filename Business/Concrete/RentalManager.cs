@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -28,6 +30,7 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
+        [ValidationAspect(typeof(RentalDtoValidator))]
         public IResult Add(RentalDto rentalDto)
         {
             var isAvailable = _rentalDal.GetAll(p=>p.CarId== rentalDto.CarId &&p.ReturnDate==null).Any();
@@ -61,6 +64,7 @@ namespace Business.Concrete
             return new SuccessDataResult<RentalDto>(_mapper.Map<RentalDto>(_rentalDal.Get(p => p.Id == id)), Messages.Listed);
         }
 
+        [ValidationAspect(typeof(RentalDtoValidator))]
         public IResult Update(RentalDto rentalDto)
         {
            _rentalDal.Update(_mapper.Map<Rental>(rentalDto));
