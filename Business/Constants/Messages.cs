@@ -18,5 +18,7 @@ namespace Business.Constants
         public static string FirstNameMustContainOnlyLetter = "Ad yalnızca harflerden oluşmalıdır ";
         public static string LastNameMustContainOnlyLetter = "Soyad yalnızca harflerden oluşmalıdır ";
         public static string ColorNameMustContainOnlyLetter = "Renk ismi yalnızca harflerden oluşmalıdır.";
+        public static string ImagesLimitExceeded = "Araç başına resim sayısı 5 ile sınırlıdır";
+        public static string DefaultImage = "Araba resmi olmadığından default resim gösterilicektir";
     }
 }

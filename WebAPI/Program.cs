@@ -44,6 +44,7 @@ namespace WebAPI
             builder.Services.AddAutoMapper(typeof(CustomerMapper));
             builder.Services.AddAutoMapper(typeof(RentalMapper));
             builder.Services.AddAutoMapper(typeof(UserMapper));
+            builder.Services.AddAutoMapper(typeof(CarImageManager));
 
 
 
@@ -65,7 +66,7 @@ namespace WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

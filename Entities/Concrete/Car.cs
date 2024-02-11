@@ -22,10 +22,12 @@ namespace Entities.Concrete
         public virtual Brand Brand { get; set; }
         public virtual Color Color { get; set; }
         public virtual ICollection<Rental> Rentals { get;  }
+        public virtual ICollection<CarImage> CarImages { get; set; }
 
         public Car()
         {
             Rentals=new HashSet<Rental>();
+            CarImages=new HashSet<CarImage>();
         }
     }
 }
