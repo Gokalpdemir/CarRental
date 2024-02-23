@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class CarImage : IEntity
+    public class CarImage : EntityBase
     {
-        public int Id {  get; set; }
+     
         public int CarId { get; set; }
         public string? ImagePath { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public DateTime DeletedDate { get; set; }
-
         public virtual Car Car { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    [Migration("20240210145251_mig_6")]
-    partial class mig_6
+    [Migration("20240221121135_mig_1")]
+    partial class mig_1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -125,7 +124,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("CarImage");
+                    b.ToTable("CarImages");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Color", b =>
@@ -185,6 +184,32 @@ namespace DataAccess.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("Entities.Concrete.OperationClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OpertaionClaims");
+                });
+
             modelBuilder.Entity("Entities.Concrete.Rental", b =>
                 {
                     b.Property<int>("Id")
@@ -199,7 +224,7 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DeletedDate")
@@ -218,7 +243,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Rentals");
                 });
@@ -249,9 +274,16 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -259,6 +291,38 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.UserOperationClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OperationClaimId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationClaimId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserOperationClaims");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Car", b =>
@@ -312,13 +376,32 @@ namespace DataAccess.Migrations
 
                     b.HasOne("Entities.Concrete.Customer", "Customer")
                         .WithMany("Rentals")
-                        .HasForeignKey("CustomerID")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Car");
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.UserOperationClaim", b =>
+                {
+                    b.HasOne("Entities.Concrete.OperationClaim", "OperationClaim")
+                        .WithMany("UserOperationClaims")
+                        .HasForeignKey("OperationClaimId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.User", "User")
+                        .WithMany("UserOperationClaims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OperationClaim");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Brand", b =>
@@ -343,9 +426,16 @@ namespace DataAccess.Migrations
                     b.Navigation("Rentals");
                 });
 
+            modelBuilder.Entity("Entities.Concrete.OperationClaim", b =>
+                {
+                    b.Navigation("UserOperationClaims");
+                });
+
             modelBuilder.Entity("Entities.Concrete.User", b =>
                 {
                     b.Navigation("Customers");
+
+                    b.Navigation("UserOperationClaims");
                 });
 #pragma warning restore 612, 618
         }

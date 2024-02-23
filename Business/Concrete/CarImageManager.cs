@@ -29,7 +29,7 @@ namespace Business.Concrete
             _mapper = mapper;
 
         }
-
+        
         public IResult Add(IFormFile file, CarImageDto carImageDto)
         {
             var result = BusinessRules.Run(checkCarImagesLimit(carImageDto.CarId));

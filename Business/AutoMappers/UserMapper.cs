@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
@@ -13,8 +14,8 @@ namespace Business.AutoMappers
     {
         public UserMapper()
         {
-            CreateMap<User,UserDto>();
-            CreateMap<UserDto,User>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
         }
     }
 }

@@ -25,22 +25,21 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(u => u.Email).NotEmpty();
             RuleFor(u => u.Email).EmailAddress();
 
-            RuleFor(u => u.Password).NotEmpty();
-            RuleFor(u => u.Password).MinimumLength(6);
-            RuleFor(u => u.Password).Must(IsContainLetter).Must(IsContainDigit).Must(IsContainSpecialCharacter).Must(IsContainUppercaseLetter).WithMessage(Messages.PasswordRequirements);
+           RuleFor(u=>u.PasswordHash).NotEmpty();
+           RuleFor(u=>u.PasswordSalt).NotEmpty();
+
 
         }
-
-        private bool IsContainUppercaseLetter(string arg)
-        {
-            return arg.Any(char.IsUpper);
-        }
-
         private bool IsLetter(string arg)
         {
             Regex regex = new Regex(@"^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$");
             return regex.IsMatch(arg);
         }
+        private bool IsContainUppercaseLetter(string arg)
+        {
+            return arg.Any(char.IsUpper);
+        }
+
 
         //karakter içeriyor mu kontrol eder
         private bool IsContainLetter(string arg)

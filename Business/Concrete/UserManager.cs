@@ -32,7 +32,6 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        [ValidationAspect(typeof(UserDtoValidator))]
         public IResult Add(UserDto userDto)
         {
            _userDal.Add(_mapper.Map<User>(userDto));
@@ -62,6 +61,22 @@ namespace Business.Concrete
                
 
             
+        }
+
+        public IDataResult<UserDto> GetByMail(string email)
+        {
+            var user =_userDal.Get(u=>u.Email == email);
+            if(user == null)
+            {
+                return new ErrorDataResult<UserDto>(Messages.UserNotFound);     
+            }
+           return new SuccessDataResult<UserDto>(_mapper.Map<UserDto>(user));
+        }
+
+        public IDataResult<List<OperationClaim>> GetClaims(UserDto userDto)
+        {
+
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(_mapper.Map<User>(userDto)),Messages.Listed);
         }
 
         [ValidationAspect(typeof(UserDtoValidator))]

@@ -1,38 +1,54 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
+using Business.AutoMappers;
 using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
-
 namespace ConsoleUI
 { 
     internal class Program
     {
         static void Main(string[] args)
         {
-            IAuthenticationService authenticationService = new AuthentcionService(new EfUserDal(), new EfCustomerDal());
-            RegisterAsCustomerDto registerAsCustomerDto = new RegisterAsCustomerDto()
-            {
-                FirstName = "test",
-                LastName = "test",
-                Email = "test@gmail.com",
-                Password = "test",
-                CompanyName = "test"
-            };
+            
+            EfUserOperationClaimDal efUserOperationClaimDal = new EfUserOperationClaimDal();
+            efUserOperationClaimDal.Add(new UserOperationClaim { UserId = 1, OperationClaimId = 2 });
 
-            authenticationService.RegisterAsCustomer(registerAsCustomerDto);
+            //IAuthenticationService authenticationService = new AuthentcionService(new EfUserDal(), new EfCustomerDal());
+            //RegisterAsCustomerDto registerAsCustomerDto = new RegisterAsCustomerDto()
+            //{
+            //    FirstName = "test",
+            //    LastName = "test",
+            //    Email = "test@gmail.com",
+            //    Password = "test",
+            //    CompanyName = "test"
+            //};
+
+            //authenticationService.RegisterAsCustomer(registerAsCustomerDto);
 
 
             //CarTest();
             //BrandTest();
             //ColorTest();
+            //AddClaim();
 
             //UserTest();
             //CustomerTest();
 
             //RentalTest();
 
+            OperationClaimManager operationClaimManager = new OperationClaimManager(new EfOperationClaimDal());
+            operationClaimManager.Add(new OperationClaimDto { Name = "Employee" });
+
+
+        }
+
+        private static void AddClaim()
+        {
+            EfOperationClaimDal efOperationClaim = new EfOperationClaimDal();
+            efOperationClaim.Add(new OperationClaim { Name = "Moderator" });
         }
 
         private static void RentalTest()
@@ -62,7 +78,6 @@ namespace ConsoleUI
         private static void UserTest()
         {
             UserManager userManager = new UserManager(new EfUserDal());
-            userManager.Add(new UserDto { FirstName = "Gökalp", LastName = "Demir", Email = "gokalpdmmr@gmail.com", Password = "6356210t" });
         }
 
         private static void ColorTest()

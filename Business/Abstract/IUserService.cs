@@ -11,11 +11,14 @@ namespace Business.Abstract
 {
     public interface IUserService
     {
-        public IResult Add(UserDto userDto);
-        public IResult Delete(UserDto userDto);
+        IResult Add(UserDto userDto);
+        IResult Delete(UserDto userDto);
 
-        public IResult Update(UserDto userDto);
-        public IDataResult<UserDto> GetById(int id);
-        public IDataResult<List<UserDto>> GetAll();
+        IDataResult<List<OperationClaim>> GetClaims(UserDto userDto);
+
+        IDataResult<UserDto> GetByMail(string email);
+        IResult Update(UserDto userDto);
+        IDataResult<UserDto> GetById(int id);
+        IDataResult<List<UserDto>> GetAll();
     }
 }

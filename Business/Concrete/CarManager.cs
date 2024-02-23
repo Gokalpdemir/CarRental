@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -33,6 +34,7 @@ namespace Business.Concrete
 
         }
         [ValidationAspect(typeof(CarDtoValidator))]
+        [SecuredOperation("Admin")]
         public IResult Add(CarDto carDto)
         {
            
@@ -49,6 +51,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Deleted);
         }
 
+        
         public IDataResult<List<CarDto>> GetAll()
         {
             return new SuccessDataResult<List<CarDto>>(_mapper.Map<List<CarDto>>(_carDal.GetAll()), Messages.Listed);
@@ -65,6 +68,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarDtoValidator))]
+
 
         public IResult Update(CarDto carDto)
         {
