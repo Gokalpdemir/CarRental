@@ -7,8 +7,8 @@
   <li>Entity Framework</li>
   <li>Traditional Architecture </li>
   <li>Autofac</li>
-  <li>Aspect oriented programming(AOP)</li>
-  <li>Nesne Yönelimli Programlama(OOP)</li>
+  <li>Aspect-oriented programming(AOP)</li>
+  <li>Object-oriented programming(OOP)</li>
   <li>Auto Mapper</li>
   <li>Fluent Validation</li>
   <li>JWT (JSON Web Token)</li>
