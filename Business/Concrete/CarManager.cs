@@ -3,6 +3,7 @@ using Business.Abstract;
 using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
@@ -35,41 +36,43 @@ namespace Business.Concrete
         }
         [ValidationAspect(typeof(CarDtoValidator))]
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(CarDto carDto)
         {
            
-                ValidationTool.Validate(new CarDtoValidator(), carDto);
+                ValidationTool.Validate(new CarDtoValidator(), carDto); 
                 _carDal.Add(_mapper.Map<Car>(carDto));
                 return new SuccessResult(Messages.Added);
         }
 
 
-
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(CarDto carDto)
         {
             _carDal.Delete(_mapper.Map<Car>(carDto));
             return new SuccessResult(Messages.Deleted);
         }
 
-        
+        [CacheAspect]
         public IDataResult<List<CarDto>> GetAll()
         {
             return new SuccessDataResult<List<CarDto>>(_mapper.Map<List<CarDto>>(_carDal.GetAll()), Messages.Listed);
         }
 
+        [CacheAspect]
         public IDataResult<CarDto> GetById(int id)
         {
             return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(_carDal.Get(p => p.Id == id)), Messages.Listed);
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.Listed);
         }
 
         [ValidationAspect(typeof(CarDtoValidator))]
-
-
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(CarDto carDto)
         {
             _carDal.Update(_mapper.Map<Car>(carDto));

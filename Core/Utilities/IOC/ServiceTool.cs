@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.IOC
+namespace Core.Utilities.IOC
 {
     public static class ServiceTool
     {

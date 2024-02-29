@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Extras.DynamicProxy;
+using AutoMapper;
 using Business.Abstract;
+using Business.AutoMappers;
 using Business.Concrete;
 using Business.Security.JWT;
 using Castle.DynamicProxy;
@@ -60,7 +62,6 @@ namespace Business.DependencyResolvers.Autofac
 
 
 
-
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
@@ -68,6 +69,7 @@ namespace Business.DependencyResolvers.Autofac
                 {
                     Selector = new AspectInterceptorSelector()
                 }).SingleInstance();
+            
         }
     }
 }

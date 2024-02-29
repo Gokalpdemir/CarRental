@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Business;
 using Core.Utilities.Helpers.FileHelper;
 using Core.Utilities.Results;
@@ -29,7 +30,8 @@ namespace Business.Concrete
             _mapper = mapper;
 
         }
-        
+
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult Add(IFormFile file, CarImageDto carImageDto)
         {
             var result = BusinessRules.Run(checkCarImagesLimit(carImageDto.CarId));
@@ -41,7 +43,7 @@ namespace Business.Concrete
             _carImageDal.Add(_mapper.Map<CarImage>(carImageDto));
             return new SuccessResult(Messages.Added);
         }
-
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult Delete(CarImageDto carImageDto)
         {
             _fileHelper.Delete(PathConstants.ImagesPath + carImageDto.ImagePath);
@@ -49,29 +51,31 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Deleted);
         }
 
+        [CacheAspect]
         public IDataResult<List<CarImageDto>> GetAll()
         {
-          
+
             return new SuccessDataResult<List<CarImageDto>>(_mapper.Map<List<CarImageDto>>(_carImageDal.GetAll()), Messages.Listed);
         }
 
+        [CacheAspect]
         public IDataResult<List<CarImageDto>> GetByCarId(int carId)
         {
-          var result=  BusinessRules.Run(checkCarImage(carId));
-            if(result != null)
+            var result = BusinessRules.Run(checkCarImage(carId));
+            if (result != null)
             {
-                return new ErrorDataResult<List<CarImageDto>>(GetDefaultImage(carId).Data,result.Message);
+                return new ErrorDataResult<List<CarImageDto>>(GetDefaultImage(carId).Data, result.Message);
             }
             return new SuccessDataResult<List<CarImageDto>>(_mapper.Map<List<CarImageDto>>(_carImageDal.GetAll(c => c.CarId == carId)), Messages.Listed);
         }
 
-        
-
+        [CacheAspect]
         public IDataResult<CarImageDto> GetByImageId(int imageId)
         {
             return new SuccessDataResult<CarImageDto>(_mapper.Map<CarImageDto>(_carImageDal.Get(c => c.Id == imageId)), Messages.Listed);
         }
 
+        [CacheRemoveAspect("ICarImageService.Get")]
         public IResult Update(IFormFile file, CarImageDto carImageDto)
         {
             carImageDto.ImagePath = _fileHelper.Update(file, PathConstants.ImagesPath + carImageDto.ImagePath, PathConstants.ImagesPath);
@@ -79,6 +83,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [CacheAspect]
         private IDataResult<List<CarImageDto>> GetDefaultImage(int carId)
         {
             List<CarImageDto> carImageDtos = new List<CarImageDto>();
@@ -97,7 +102,7 @@ namespace Business.Concrete
         }
         private IResult checkCarImage(int carId)
         {
-            bool carImages=_carImageDal.GetAll(c=>c.CarId == carId).Any();
+            bool carImages = _carImageDal.GetAll(c => c.CarId == carId).Any();
             if (carImages)
             {
                 return new SuccessResult();

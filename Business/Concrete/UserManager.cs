@@ -3,6 +3,7 @@ using Business.Abstract;
 using Business.AutoMappers;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -44,25 +45,20 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Deleted);
         }
 
+       
         public IDataResult<List<UserDto>> GetAll()
         {
             return new SuccessDataResult<List<UserDto>>(_mapper.Map<List<UserDto>>(_userDal.GetAll()),Messages.Listed);
         }
 
+        
         public IDataResult<UserDto> GetById(int id)
         {
-            var result = _mapper.Map<UserDto>(_userDal.Get(p => p.Id == id));
-            if(result ==null)
-            {
-                return new ErrorDataResult<UserDto>(Messages.Error);
-
-            }
-            return new SuccessDataResult<UserDto>(result,Messages.Listed);
-               
-
-            
+          
+            return new SuccessDataResult<UserDto>(_mapper.Map<UserDto>(_userDal.Get(p => p.Id == id)), Messages.Listed);
         }
 
+        
         public IDataResult<UserDto> GetByMail(string email)
         {
             var user =_userDal.Get(u=>u.Email == email);

@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Business.AutoMappers;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -36,6 +37,7 @@ namespace Business.Concrete
 
         }
 
+        [CacheRemoveAspect("IOperationClaimService.Get")]
         public IResult Add(OperationClaimDto operationClaimDto)
         {
           var result=  BusinessRules.Run(ClaimAlreadyExists(operationClaimDto));
@@ -48,6 +50,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.Added);
         }
 
+        [CacheRemoveAspect("IOperationClaimService.Get")]
         public IResult Delete(OperationClaimDto operationClaimDto)
         {
             var result =BusinessRules.Run(CheckOperationClaim(operationClaimDto.Id));
@@ -60,26 +63,23 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect]
         public IDataResult<OperationClaimDto> GetById(int claimId)
         {
-            var result = BusinessRules.Run(CheckOperationClaim(claimId));
-            if(result != null )
-            {
-                return new ErrorDataResult<OperationClaimDto>(result.Message);
-            }
+           
+            
             return new SuccessDataResult<OperationClaimDto>(_mapper.Map<OperationClaimDto>(_operationClaimDal.Get(o => o.Id == claimId)),Messages.Listed);
         }
 
+        [CacheAspect]
         public IDataResult<List<OperationClaimDto>> GetAll()
         {
-           var result = _operationClaimDal.GetAll();
-            if(result != null)
-            {
-                return new SuccessDataResult<List<OperationClaimDto>>(_mapper.Map<List<OperationClaimDto>>(result),Messages.Listed);
-            }
-            return new ErrorDataResult<List<OperationClaimDto>>(Messages.Error);
+           
+                return new SuccessDataResult<List<OperationClaimDto>>(_mapper.Map<List<OperationClaimDto>>(_operationClaimDal.GetAll()),Messages.Listed);
+           
         }
 
+        [CacheRemoveAspect("IOperationClaimService.Get")]
         public IResult Update(OperationClaimDto operationClaimDto)
         {
             var result = BusinessRules.Run(CheckOperationClaim(operationClaimDto.Id));

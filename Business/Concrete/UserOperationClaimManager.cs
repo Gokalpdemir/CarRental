@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Business.BusinessAspect.Autofac;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -26,36 +27,33 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-       
 
+        [CacheAspect]
+        [SecuredOperation("Admin")]
         public IDataResult<List<UserOperationClaimDto>> GetAll()
         {
-            var result =_userOperationClaimDal.GetAll();
-            if(result == null)
-            {
-                return new ErrorDataResult<List<UserOperationClaimDto>>(Messages.Error);
-            }
-            return new SuccessDataResult<List<UserOperationClaimDto>>(_mapper.Map<List<UserOperationClaimDto>>(result));
+           
+            return new SuccessDataResult<List<UserOperationClaimDto>>(_mapper.Map<List<UserOperationClaimDto>>(_userOperationClaimDal.GetAll()),Messages.Listed);
         }
 
+        [CacheAspect]
         public IDataResult<UserOperationClaimDto> GetById(int UserOperationClaimId)
         {
-            var result = BusinessRules.Run(checkUserOperationClaim(UserOperationClaimId));
-            if (result != null)
-            {
-                return new ErrorDataResult<UserOperationClaimDto>(result.Message);
-            }
+          
             return new SuccessDataResult<UserOperationClaimDto>(_mapper.Map<UserOperationClaimDto>(_userOperationClaimDal.Get(uoc=>uoc.Id==UserOperationClaimId)),Messages.Listed);
 
          
         }
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IUserOperationClaimService.Get")]
         public IResult Add(UserOperationClaimDto userOperationClaimDto)
         {
             _userOperationClaimDal.Add(_mapper.Map<UserOperationClaim>(userOperationClaimDto));
             return new SuccessResult(Messages.Added);
         }
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IUserOperationClaimService.Get")]
+
         public IResult Update(UserOperationClaimDto userOperationClaimDto)
         {
             var result = BusinessRules.Run(checkUserOperationClaim(userOperationClaimDto.Id));
@@ -69,6 +67,8 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IUserOperationClaimService.Get")]
+
         public IResult Delete(UserOperationClaimDto userOperationClaimDto)
         {
             var result = BusinessRules.Run(checkUserOperationClaim(userOperationClaimDto.Id));

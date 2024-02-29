@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 using Business.Security.Encryption;
-using Core.IOC;
+using Core.Extensions;
+using Core.DependencyResolvers;
+using Core.Utilities.IOC;
 
 namespace WebAPI
 {
@@ -29,41 +31,17 @@ namespace WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddSingleton<ICarService, CarManager>();
-            //builder.Services.AddSingleton<IBrandService, BrandManager>();
-            //builder.Services.AddSingleton<IColorService, ColorManager>();
-            //builder.Services.AddSingleton<ICustomerService, CustomerManager>();
-            //builder.Services.AddSingleton<IRentalService, RentalManager>();
-            //builder.Services.AddSingleton<IUserService, UserManager>();
-
-            //builder.Services.AddSingleton<IBrandDal, EfBrandDal>();
-            //builder.Services.AddSingleton<ICarDal, EfCarDal>();
-            //builder.Services.AddSingleton<IColorDal, EfColorDal>();
-            //builder.Services.AddSingleton<ICustomerDal, EfCustomerDal>();
-            //builder.Services.AddSingleton<IRentalDal, EfRentalDal>();
-            //builder.Services.AddSingleton<IUserDal, EfUserDal>();
-
-            //AutoMapper
-            builder.Services.AddAutoMapper(typeof(CarMapper));
-            builder.Services.AddAutoMapper(typeof(BrandMapper));
-            builder.Services.AddAutoMapper(typeof(ColorMapper));
-            builder.Services.AddAutoMapper(typeof(CustomerMapper));
-            builder.Services.AddAutoMapper(typeof(RentalMapper));
-            builder.Services.AddAutoMapper(typeof(UserMapper));
-            builder.Services.AddAutoMapper(typeof(CarImageMapper));
-            builder.Services.AddAutoMapper(typeof(OperationClaimMapper));
-            builder.Services.AddAutoMapper(typeof(UserOperationClaimMapper));
-
-
-
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
                .ConfigureContainer<ContainerBuilder>(
                builder =>
                {
                    builder.RegisterModule(new AutofacBusinessModule());
+                   builder.RegisterModule(new AutofacMapperRegisterModule());
+
+
+
                });
 
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();// day 14 start
             var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<Business.Security.JWT.TokenOptions>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -80,12 +58,12 @@ namespace WebAPI
                                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                                 };
                             });
+            builder.Services.AddDependencyResolvers(new ICoreModule[] {
+                new CoreModule()
+            });
 
 
 
-
-
-            ServiceTool.Create(builder.Services);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
