@@ -5,6 +5,7 @@
   <li>ASP.NET Core</li>
   <li>MS SQL</li>
   <li>Entity Framework</li>
+  <li>Traditional Architecture </li>
   <li>Autofac</li>
   <li>Aspect oriented programming(AOP)</li>
   <li>Nesne Yönelimli Programlama(OOP)</li>
